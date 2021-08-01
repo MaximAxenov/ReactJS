@@ -7,6 +7,11 @@ import {Message} from "./components/Message";
 import { MessageField } from './components/MessageField';
 import{Form} from "./components/form";
 import { AUTHORS } from './constants';
+import React from 'react';
+import ReactDOM from 'react-dom';
+import Demo from './demo';
+
+ReactDOM.render(<Demo />, document.querySelector('#root'));
 
 function App() {
   const[messages, setMessages] = useState([{text:'Dymmy',author: AUTHORS.human, id:1}
@@ -35,9 +40,10 @@ function App() {
 
   return()=> clearTimeout(timeout);
   },[messages]);
-
+  
   return (
     <header className="App-header">
+      <Demo />
     <div className="App">
       <MessageField messages={messages}/>
       <Form onSendMessage={handleSendMessage}/>
