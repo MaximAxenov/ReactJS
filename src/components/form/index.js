@@ -1,5 +1,5 @@
 import React, {useState} from "react";
-import { AUTHORS, AUTHORs } from "../../constants";
+import {AUTHORS} from "../../constants";
 import '../form/index.css'
 
 export const Form = ({onSendMessage}) => {
@@ -22,7 +22,7 @@ export const Form = ({onSendMessage}) => {
 
     return (
         <form onSubmit={handleSubmit}>
-            <input className="input" type="text" value={value} onChange={handleChange}/>
+            <input className="input" type="text" value={value} onChange={handleChange} autoFocus/>
             <input className="butt" type="submit"/>
         </form>
     )
