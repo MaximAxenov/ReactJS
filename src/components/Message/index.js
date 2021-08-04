@@ -1,8 +1,8 @@
 import React from "react";
-import {usePrev} from "../../utils";
+import { usePrev } from "../../utils";
 
-export const Message = ({ text, author})=> (
-    <div>
-        {author}: {text}
-    </div>
-)
+export const Message = ({ text, author }) => (
+  <div>
+    {author}: {text}
+  </div>
+);
