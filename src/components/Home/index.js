@@ -1,10 +1,10 @@
-import "./Home.css";
 import { useEffect, useState, useCallback } from "react";
 import { MessageList } from "../MessageList";
 import { Form } from "../Form";
 import { AUTHORS } from "../../constants";
 import { ChatList } from "../ChatList";
 import { useParams } from "react-router-dom";
+import "./Home.css";
 
 const initialChats = {
   chat1: {
@@ -49,8 +49,8 @@ function Home() {
     if (
       !chatId ||
       !chats[chatId]?.messages.length ||
-        chats[chatId].messages[chats[chatId].messages.length - 1].author ===
-          AUTHORS.robot
+      chats[chatId].messages[chats[chatId].messages.length - 1].author ===
+        AUTHORS.robot
     ) {
       return;
     }
