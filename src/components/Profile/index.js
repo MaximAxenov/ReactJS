@@ -1,24 +1,76 @@
 import React, { useState } from "react";
-import { store } from "../../store";
-import { PROFILE_TOGGLE_SHOW } from "../../store/actionTypes";
-import { useSelector, useDispatch } from "react-redux";
+import {
+  PROFILE_TOGGLE_SHOW,
+  PROFILE_SET_NAME,
+} from "../../store/profile/actionTypes";
+import { useSelector, useDispatch, connect } from "react-redux";
+import { changeName } from "../../store/profile/actions";
+import { selectName } from "../../store/profile/selectors";
 
 export const Profile = () => {
-  const profileState = useSelector((state) => state);
+  const [value, setValue] = useState("");
+  const name = useSelector(selectName);
   const dispatch = useDispatch();
 
-  const toggleShow = () => {
-    dispatch({
-      type: PROFILE_TOGGLE_SHOW,
-    });
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    dispatch(changeName(value));
+    setValue("");
   };
-  console.log(profileState);
+
+  const handleChange = (e) => {
+    setValue(e.target.value);
+  };
 
   return (
     <>
-      <h2>THIS IS PROFILE</h2>
-      <button onClick={toggleShow}>TOGGLE show</button>
-      {profileState.show && <div>THIS DEPENDS ON GLOBAL REDUX STATE</div>}
+      <h2>THIS IS PROFILE OF {name}</h2>
+      <form action="" onSubmit={handleSubmit}>
+        <input value={value} onChange={handleChange} />
+        <button onClick={handleSubmit}>Save name</button>
+      </form>
     </>
   );
 };
+
+export default Profile;
+
+// export class Profile extends React.Component {
+//   state = {
+//     value: "",
+//   };
+
+//   handleSubmit = (e) => {
+//     const { setName } = this.props;
+//     e.preventDefault();
+//     setName(this.state.value);
+//     this.setState({ value: "" });
+//   };
+
+//   handleChange = (e) => {
+//     this.setState({ value: e.target.value });
+//   };
+
+//   render() {
+//     const { name } = this.props;
+//     return (
+//       <>
+//         <h2>THIS IS PROFILE OF {name}</h2>
+//         <form action="" onSubmit={this.handleSubmit}>
+//           <input value={this.state.value} onChange={this.handleChange} />
+//           <button onClick={this.handleSubmit}>Save name</button>
+//         </form>
+//       </>
+//     );
+//   }
+// }
+
+// const mapStateToProps = (state) => ({
+//   name: selectName(state),
+// });
+
+// const mapDispatchToProps = {
+//   setName: changeName,
+// };
+
+// export default connect(mapStateToProps, mapDispatchToProps)(Profile);

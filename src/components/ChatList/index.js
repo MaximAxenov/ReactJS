@@ -3,7 +3,7 @@ import { List, ListItem } from "@material-ui/core";
 import { Link } from "react-router-dom";
 import { ThemeContext } from "../../utils/ThemeContext";
 import { withThemeContext } from "../Message";
-import "../ChatList/ChatList.css"
+import { AddChat } from "./AddChat";
 
 const Chats = ({ chats, theme }) => {
   return (
@@ -12,9 +12,12 @@ const Chats = ({ chats, theme }) => {
       <List>
         {Object.values(chats).map((c) => (
           <ListItem key={c.id}>
-            <Link className="Item" to={`/home/${c.id}`}>{c.name}</Link>
+            <Link to={`/home/${c.id}`}>{c.name}</Link>
           </ListItem>
         ))}
+        <ListItem>
+          <AddChat />
+        </ListItem>
       </List>
     </>
   );
