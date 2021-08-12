@@ -5,6 +5,8 @@ import { Form } from "../Form";
 import { AUTHORS } from "../../constants";
 import { ChatList } from "../ChatList";
 import { useParams } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import { sendMessage } from "../../store/chats/actions";
 
 const initialChats = {
   chat1: {
@@ -24,33 +26,23 @@ const initialChats = {
 
 function Home() {
   const { chatId } = useParams();
-  console.log(chatId);
 
-  // const [messages, setMessages] = useState([
-  //   { text: "Dummy", author: AUTHORS.human, id: 1 },
-  // ]);
-  const [chats, setChats] = useState(initialChats);
+  const chats = useSelector(state => state.chats);
+  const dispatch = useDispatch();
 
   const handleSendMessage = useCallback(
     (newMessage) => {
-      // setMessages([...messages, newMessage]);
-      setChats({
-        ...chats,
-        [chatId]: {
-          ...chats[chatId],
-          messages: [...chats[chatId].messages, newMessage],
-        },
-      });
+      dispatch(sendMessage(chatId, newMessage));
     },
-    [chats, chatId]
+    [chatId]
   );
 
   useEffect(() => {
     if (
       !chatId ||
       !chats[chatId]?.messages.length ||
-        chats[chatId].messages[chats[chatId].messages.length - 1].author ===
-          AUTHORS.robot
+      chats[chatId].messages[chats[chatId].messages.length - 1].author ===
+        AUTHORS.robot
     ) {
       return;
     }

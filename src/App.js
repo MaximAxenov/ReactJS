@@ -1,11 +1,12 @@
+import { Provider } from "react-redux";
 import { Router } from "./components/Router";
-import './App.css';
+import { store } from "./store";
 
 function App() {
   return (
-    <div className="App">
+    <Provider store={store}>
       <Router />
-    </div>
+    </Provider>
   );
 }
 
