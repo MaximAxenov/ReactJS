@@ -1,69 +1,42 @@
 import "./Home.css";
-import { useEffect, useState, useCallback } from "react";
+import { useCallback } from "react";
+import { useParams, Redirect, useHistory } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+
 import { MessageList } from "../MessageList";
 import { Form } from "../Form";
-import { AUTHORS } from "../../constants";
 import { ChatList } from "../ChatList";
-import { useParams } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
-import { sendMessage } from "../../store/chats/actions";
-
-const initialChats = {
-  chat1: {
-    messages: [{ text: "Dummy", author: AUTHORS.human, id: "chat1-1" }],
-    name: "Chat 1",
-    id: "chat1",
-  },
-  chat2: {
-    name: "Chat 2",
-    id: "chat2",
-    messages: [
-      { text: "this is chat 2", author: AUTHORS.human, id: "chat2-1" },
-    ],
-  },
-  chat3: { name: "Chat 3", id: "chat3", messages: [] },
-};
+import { sendMessageWithReply, sendMessage, deleteChat } from "../../store/chats/actions";
+import { selectName } from "../../store/profile/selectors";
 
 function Home() {
   const { chatId } = useParams();
+  const history = useHistory();
 
   const chats = useSelector(state => state.chats);
+  const name = useSelector(selectName);
   const dispatch = useDispatch();
 
   const handleSendMessage = useCallback(
     (newMessage) => {
-      dispatch(sendMessage(chatId, newMessage));
+      dispatch(sendMessage(chatId, {...newMessage, author: name}));
     },
     [chatId]
   );
 
-  useEffect(() => {
-    if (
-      !chatId ||
-      !chats[chatId]?.messages.length ||
-      chats[chatId].messages[chats[chatId].messages.length - 1].author ===
-        AUTHORS.robot
-    ) {
-      return;
-    }
+  const handleDeleteChat = useCallback((id) => {
+    dispatch(deleteChat(id));
+  }, []);
 
-    const timeout = setTimeout(() => {
-      const newMessage = {
-        text: "I am a robot",
-        author: AUTHORS.robot,
-        id: Date.now(),
-      };
-
-      handleSendMessage(newMessage);
-    }, 1000);
-
-    return () => clearTimeout(timeout);
-  }, [chats]);
+  if (!!chatId && !chats[chatId]) {
+    // return <Redirect to="/nochat" />
+    history.replace('/nochat');
+  }
 
   return (
     <div className="root">
-      <ChatList chats={chats} />
-      {!!chatId && (
+      <ChatList chats={chats} onDeleteChat={handleDeleteChat} />
+      {!!chatId && chats[chatId] && (
         <div>
           <MessageList messages={chats[chatId].messages} />
           <Form onSendMessage={handleSendMessage} />
