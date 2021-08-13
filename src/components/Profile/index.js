@@ -6,6 +6,7 @@ import {
 import { useSelector, useDispatch, connect } from "react-redux";
 import { changeName } from "../../store/profile/actions";
 import { selectName } from "../../store/profile/selectors";
+import "../Profile/Profile.css"
 
 export const Profile = () => {
   const [value, setValue] = useState("");
@@ -26,8 +27,8 @@ export const Profile = () => {
     <>
       <h2>THIS IS PROFILE OF {name}</h2>
       <form action="" onSubmit={handleSubmit}>
-        <input value={value} onChange={handleChange} />
-        <button onClick={handleSubmit}>Save name</button>
+        <input className="input" value={value} onChange={handleChange} />
+        <button className="button" onClick={handleSubmit}>Save name</button>
       </form>
     </>
   );

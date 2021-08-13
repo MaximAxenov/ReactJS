@@ -25,10 +25,16 @@ export const Router = () => {
         <Switch>
           <Route
             path="/profile"
-            render={(data) => <Profile match={data.match} history={data.history} />}
+            render={(data) => (
+              <Profile match={data.match} history={data.history} />
+            )}
           ></Route>
           <Route path="/home/:chatId?">
             <Home />
+          </Route>
+          <Route path="/nochat">
+            <div> No such chat</div>
+            <Link to="/home">HOME</Link>
           </Route>
           <Route path="/" exact>
             <h2>WELCOME</h2>
@@ -44,18 +50,18 @@ export const Router = () => {
 
 const add = (a, b) => {
   return a + b;
-}
+};
 
 const subtr = (a, b) => {
   return a - b;
-}
+};
 
 const makeLogger = (fn) => {
   return (...args) => {
     console.log(args);
     fn(args);
-  } 
-}
+  };
+};
 
 const subWithLogger = makeLogger(subtr);
 const addWithLogger = makeLogger(add);
