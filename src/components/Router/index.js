@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { BrowserRouter, Link, Switch, Route } from "react-router-dom";
 import Profile from "../Profile";
 import Home from "../Home";
+import { News } from "../News";
 import { ThemeContext } from "../../utils/ThemeContext";
 import '../Router/Router.css';
 
@@ -20,6 +21,9 @@ export const Router = () => {
           <li style={{ backgroundColor: bgColor }}>
             <Link className="header" to="/profile">PROFILE</Link>
           </li>
+          <li style={{ backgroundColor: bgColor }}>
+            <Link className="header" to="/news">NEWS</Link>
+          </li>
         </ul>
 
         <Switch>
@@ -31,6 +35,9 @@ export const Router = () => {
           ></Route>
           <Route path="/home/:chatId?">
             <Home />
+          </Route>
+          <Route path="/news">
+            <News />
           </Route>
           <Route path="/nochat">
             <div> No such chat</div>
