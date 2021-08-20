@@ -24,7 +24,7 @@ export const Form = ({ onSendMessage }) => {
 
   return (
     <form onSubmit={handleSubmit}>
-      <input className="input" ref={inputRef} type="text" value={value} onChange={handleChange} />
+      <input className="input"  ref={inputRef} type="text" value={value} onChange={handleChange} />
       <input className="button" type="submit" />
     </form>
   )

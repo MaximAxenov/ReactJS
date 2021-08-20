@@ -6,10 +6,9 @@ import { withThemeContext } from "../Message";
 import { AddChat } from "./AddChat";
 import { ChatItem } from "./ChatItem";
 
-const Chats = ({ chats, theme, onDeleteChat }) => {
+export const ChatList = ({ chats, theme, onDeleteChat, onAddChat }) => {
   return (
     <>
-      <button onClick={theme.changeTheme}>CHANGE COLOR</button>
       <List>
         {Object.values(chats).map((c) => (
           <ChatItem
@@ -20,11 +19,10 @@ const Chats = ({ chats, theme, onDeleteChat }) => {
           />
         ))}
         <ListItem>
-          <AddChat />
+          <AddChat onAddChat={onAddChat} />
         </ListItem>
       </List>
     </>
   );
 };
 
-export const ChatList = withThemeContext(Chats);
