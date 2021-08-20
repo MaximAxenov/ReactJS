@@ -5,20 +5,11 @@ import { useSelector } from "react-redux";
 import { selectName } from "../../store/profile/selectors";
 import { AUTHORS } from "../../constants";
 
-export const MessageDef = ({ text, author, theme }) => {
+export const Message = ({ text, author }) => {
   const name = useSelector(selectName);
   return (
-    <div style={{ backgroundColor: theme.theme }}>
+    <div>
       {author === AUTHORS.human ? name : author}: {text}
     </div>
   );
 };
-
-export const withThemeContext = (Component) => {
-  return (props) => {
-    const theme = useContext(ThemeContext);
-    return <Component {...props} theme={theme} />;
-  };
-};
-
-export const Message = withThemeContext(MessageDef);

@@ -1,84 +1,73 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import firebase from "firebase";
 import { BrowserRouter, Link, Switch, Route } from "react-router-dom";
 import Profile from "../Profile";
 import Home from "../Home";
 import { News } from "../News";
 import { ThemeContext } from "../../utils/ThemeContext";
+import { PrivateRoute } from "../../hocs/PrivateRoute";
+import { PublicRoute } from "../../hocs/PublicRoute";
+import { Login } from "../Login";
 import '../Router/Router.css';
 
 export const Router = () => {
-  const [bgColor, setBgColor] = useState("white");
-  const changeColor = () => {
-    setBgColor((prevColor) => (prevColor === "white" ? "gray" : "white"));
-  };
-  return (
-    <ThemeContext.Provider value={{ theme: bgColor, changeTheme: changeColor }}>
-      <BrowserRouter>
-        <ul>
-          <li style={{ backgroundColor: bgColor }}>
-            <Link className="header" to="/home">HOME</Link>
-          </li>
-          <li style={{ backgroundColor: bgColor }}>
-            <Link className="header" to="/profile">PROFILE</Link>
-          </li>
-          <li style={{ backgroundColor: bgColor }}>
-            <Link className="header" to="/news">NEWS</Link>
-          </li>
-        </ul>
+  const [isAuthed, setIsAuthed] = useState(false);
 
-        <Switch>
-          <Route
-            path="/profile"
-            render={(data) => (
-              <Profile match={data.match} history={data.history} />
-            )}
-          ></Route>
-          <Route path="/home/:chatId?">
-            <Home />
-          </Route>
-          <Route path="/news">
-            <News />
-          </Route>
-          <Route path="/nochat">
-            <div> No such chat</div>
-            <Link to="/home">HOME</Link>
-          </Route>
-          <Route path="/" exact>
-            <h2>WELCOME</h2>
-          </Route>
-          <Route path="*">
-            <h2>404</h2>
-          </Route>
-        </Switch>
-      </BrowserRouter>
-    </ThemeContext.Provider>
+  useEffect(() => {
+    firebase.auth().onAuthStateChanged((user) => {
+      if (user) {
+        setIsAuthed(true);
+      } else {
+        setIsAuthed(false);
+      }
+    });
+  }, []);
+
+  return (
+    <BrowserRouter>
+      <ul>
+        <li>
+          <Link className="header" to="/home">HOME</Link>
+        </li>
+        <li>
+          <Link className="header" to="/profile">PROFILE</Link>
+        </li>
+        <li>
+          <Link className="header" to="/news">NEWS</Link>
+        </li>
+      </ul>
+
+      <Switch>
+        <PrivateRoute
+          authed={isAuthed}
+          path="/profile"
+          render={(data) => (
+            <Profile match={data.match} history={data.history} />
+          )}
+        />
+        <PrivateRoute authed={isAuthed} path="/home/:chatId?">
+          <Home />
+        </PrivateRoute>
+        <PublicRoute authed={isAuthed} path="/news">
+          <News />
+        </PublicRoute>
+        <PrivateRoute authed={isAuthed} path="/nochat">
+          <div> No such chat</div>
+          <Link to="/home">HOME</Link>
+        </PrivateRoute>
+        <Route path="/" exact>
+          <h2>WELCOME</h2>
+        </Route>
+        <PublicRoute authed={isAuthed} path="/login" exact>
+          <Login />
+        </PublicRoute>
+        <PublicRoute authed={isAuthed} path="/signup" exact>
+          <Login isSignUp />
+        </PublicRoute>
+        <Route path="*">
+          <h2>404</h2>
+        </Route>
+      </Switch>
+    </BrowserRouter>
   );
 };
-
-const add = (a, b) => {
-  return a + b;
-};
-
-const subtr = (a, b) => {
-  return a - b;
-};
-
-const makeLogger = (fn) => {
-  return (...args) => {
-    console.log(args);
-    fn(args);
-  };
-};
-
-const subWithLogger = makeLogger(subtr);
-const addWithLogger = makeLogger(add);
-
-addWithLogger(1, 2, 4);
-subWithLogger(10, 1, 0);
-
-// const perform = (fn, a, b) => {
-//   return () => fn(a, b);
-// }
-
-// const performAddOnePlusTwo = perform(add, 1, 2);
-// console.log(performAddOnePlusTwo());
