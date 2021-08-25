@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React from "react";
 import { useDispatch } from "react-redux";
-import { addChat } from "../../store/chats/actions";
+import { addChatWithFB } from "../../store/chats/actions";
 import { useInput } from "../../utils/useInput";
 import "../ChatList/ChatList.css"
 
@@ -16,14 +16,13 @@ export const AddChat = ({ onAddChat }) => {
       return;
     }
 
-    const newId = `chat-${Date.now()}`;
-    onAddChat(newId, value);
+    dispatch(addChatWithFB(value));
     reset();
   };
 
   return (
     <form onSubmit={handleSubmit}>
-      <input class="input" onChange={handleChange} value={value} />
+      <input  class="input" onChange={handleChange} value={value} />
     </form>
   );
 };

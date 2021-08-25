@@ -3,9 +3,7 @@ import ReactDOM from "react-dom";
 import "./index.css";
 import App from "./App";
 
-import { initFB } from "./services/firebase";
-
-initFB();
+import "./services/firebase";
 
 ReactDOM.render(
   <React.StrictMode>

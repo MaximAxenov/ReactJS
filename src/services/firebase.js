@@ -1,13 +1,16 @@
 import firebase from 'firebase';
 
 const firebaseConfig = {
-  apiKey: "AIzaSyCSiRXPT51VbvtzUXVeaB7XQJcRJbjJ2Zo",
-  authDomain: "v-mes-443a3.firebaseapp.com",
-  projectId: "v-mes-443a3",
-  storageBucket: "v-mes-443a3.appspot.com",
-  messagingSenderId: "461405965218",
-  appId: "1:461405965218:web:985b130a4d81c80d0a00fb",
-  measurementId: "G-V7K19ZD7QC"
+  apiKey: "AIzaSyDy34dOG9yB7gJ8qkq_GilyAlOazTDErOw",
+  authDomain: "v-mes-2.firebaseapp.com",
+  projectId: "v-mes-2",
+  storageBucket: "v-mes-2.appspot.com",
+  messagingSenderId: "424866467903",
+  appId: "1:424866467903:web:38204b671c2c327987688a"
 };
 
-export const initFB = () => firebase.initializeApp(firebaseConfig);
+firebase.initializeApp(firebaseConfig);
+
+
+export const db = firebase.database();
+export const auth = firebase.auth();

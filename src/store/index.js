@@ -10,6 +10,7 @@ import { middleware } from "./middlewares";
 // import { chatsSaga } from "./chats/saga";
 import { articlesReducer } from "./articles/reducer";
 import thunk from "redux-thunk";
+import { messagesReducer } from "./messages/reducer";
 
 const persistConfig = {
   key: "GB-messenger",
@@ -19,6 +20,7 @@ const persistConfig = {
 const rootReducer = combineReducers({
   chats: chatsReducer,
   profile: profileReducer,
+  messages: messagesReducer,
   articles: articlesReducer,
 });
 
