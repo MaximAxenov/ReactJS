@@ -3,9 +3,14 @@ import firebase from "firebase";
 import { useInput } from "../../utils/useInput";
 import "./styles.css";
 import { Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { signUpWithFB, loginWithFB } from "../../store/profile/actions";
+import { selectProfileError } from "../../store/profile/selectors";
 
 export const Login = ({ isSignUp }) => {
-  const [error, setError] = useState("");
+  const dispatch = useDispatch();
+  const error = useSelector(selectProfileError);
+
   const {
     value: email,
     handleChange: handleChangeEmail,
@@ -24,18 +29,13 @@ export const Login = ({ isSignUp }) => {
       return;
     }
 
-    try {
-      if (isSignUp) {
-        await firebase.auth().createUserWithEmailAndPassword(email, password);
-      } else {
-        await firebase.auth().signInWithEmailAndPassword(email, password);
-      }
-      resetEmail();
-      resetPassword();
-    } catch (error) {
-      console.log(error);
-      setError(error.message);
+    if (isSignUp) {
+      dispatch(signUpWithFB(email, password));
+    } else {
+      dispatch(loginWithFB(email, password));
     }
+    resetEmail();
+    resetPassword();
   };
 
   return (

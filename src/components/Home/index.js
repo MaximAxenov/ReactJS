@@ -1,88 +1,46 @@
 import "./Home.css";
-import { useCallback, useState, useEffect } from "react";
+import { useCallback, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import firebase from "firebase";
 
 import { MessageList } from "../MessageList";
 import { Form } from "../Form";
 import { ChatList } from "../ChatList";
 import { selectName } from "../../store/profile/selectors";
+import { selectChats } from "../../store/chats/selectors";
+import { selectMessages } from "../../store/messages/selectors";
+import {
+  connectChatsToFB,
+} from "../../store/chats/actions";
+import {
+  connectMessagesToFB,
+  sendMessageWithFB,
+} from "../../store/messages/actions";
 
 function Home() {
   const { chatId } = useParams();
 
-  const [chats, setChats] = useState({});
-  const [messages, setMessages] = useState([]);
-
-  useEffect(() => {
-    const db = firebase.database();
-    db.ref("chats").on("value", (snapshot) => {
-      let newChats = {};
-      snapshot.forEach((snap) => {
-        const currentChat = snap.val();
-        newChats[currentChat.id] = currentChat;
-      });
-
-      setChats(newChats);
-    });
-  }, []);
-
-  useEffect(() => {
-    const db = firebase.database();
-    db.ref("messages").on("value", (snapshot) => {
-      let newMessages = {};
-      if (!snapshot) {
-        return;
-      }
-      snapshot.forEach((snap) => {
-        const currentMsgs = snap.val();
-        if (newMessages[snap.key]) {
-          newMessages[snap.key].concat(Object.values(currentMsgs));
-        } else {
-          newMessages[snap.key] = Object.values(currentMsgs);
-        }
-      });
-
-      setMessages(newMessages);
-    });
-
-    return db.ref("messages").off;
-  }, []);
-
-  const addChat = (id, name) => {
-    const db = firebase.database();
-    db.ref("chats").child(id).set({
-      name,
-      id,
-    });
-  };
-
-  const removeChat = (id) => {
-    const db = firebase.database();
-    db.ref("chats").child(id).remove();
-  };
-
+  const dispatch = useDispatch();
+  const chats = useSelector(selectChats);
+  const messages = useSelector(selectMessages);
   const name = useSelector(selectName);
+
+  useEffect(() => {
+    dispatch(connectChatsToFB());
+    dispatch(connectMessagesToFB());
+  }, []);
 
   const handleSendMessage = useCallback(
     (newMessage) => {
-      const db = firebase.database();
-      db.ref("messages")
-        .child(chatId)
-        .push({
-          ...newMessage,
-          author: name,
-          id: `${chatId}-${Date.now()}`,
-          chatId,
-        });
+      dispatch(sendMessageWithFB(chatId, { ...newMessage, author: name }));
     },
-    [chatId, name]
+    [chatId, name, dispatch]
   );
 
   return (
     <div className="root">
-      <ChatList chats={chats} onDeleteChat={removeChat} onAddChat={addChat} />
+      <ChatList chats={chats} />
       {!!chatId && (
         <div>
           <MessageList messages={messages[chatId] || []} />

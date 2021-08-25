@@ -1,26 +1,23 @@
-import React, { useState, useEffect } from "react";
-import firebase from "firebase";
+import React, { useEffect } from "react";
 import { BrowserRouter, Link, Switch, Route } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import firebase from "firebase";
+
 import Profile from "../Profile";
 import Home from "../Home";
 import { News } from "../News";
-import { ThemeContext } from "../../utils/ThemeContext";
 import { PrivateRoute } from "../../hocs/PrivateRoute";
 import { PublicRoute } from "../../hocs/PublicRoute";
 import { Login } from "../Login";
+import { connectProfileToFB } from "../../store/profile/actions";
+import { Logout } from "../Logout";
 import '../Router/Router.css';
 
 export const Router = () => {
-  const [isAuthed, setIsAuthed] = useState(false);
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    firebase.auth().onAuthStateChanged((user) => {
-      if (user) {
-        setIsAuthed(true);
-      } else {
-        setIsAuthed(false);
-      }
-    });
+    dispatch(connectProfileToFB());
   }, []);
 
   return (
@@ -37,31 +34,32 @@ export const Router = () => {
         </li>
       </ul>
 
+      <Logout />
+
       <Switch>
         <PrivateRoute
-          authed={isAuthed}
           path="/profile"
           render={(data) => (
             <Profile match={data.match} history={data.history} />
           )}
         />
-        <PrivateRoute authed={isAuthed} path="/home/:chatId?">
+        <PrivateRoute path="/home/:chatId?">
           <Home />
         </PrivateRoute>
-        <PublicRoute authed={isAuthed} path="/news">
+        <PublicRoute path="/news">
           <News />
         </PublicRoute>
-        <PrivateRoute authed={isAuthed} path="/nochat">
+        <PrivateRoute path="/nochat">
           <div> No such chat</div>
           <Link to="/home">HOME</Link>
         </PrivateRoute>
         <Route path="/" exact>
           <h2>WELCOME</h2>
         </Route>
-        <PublicRoute authed={isAuthed} path="/login" exact>
+        <PublicRoute path="/login" exact>
           <Login />
         </PublicRoute>
-        <PublicRoute authed={isAuthed} path="/signup" exact>
+        <PublicRoute path="/signup" exact>
           <Login isSignUp />
         </PublicRoute>
         <Route path="*">
